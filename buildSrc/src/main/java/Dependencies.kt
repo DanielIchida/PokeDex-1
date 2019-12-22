@@ -50,6 +50,7 @@ object Dependencies {
     private const val androidXJunitExtension = "androidx.test.ext:junit:${Versions.androidXJunit}"
     const val fragmentTesting = "androidx.fragment:fragment-testing:${Versions.fragments}"
     private const val mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
+    private const val paging = "androidx.paging:paging-runtime-ktx:${Versions.paging}"
 
     val imageLoaderDependencies = listOf(
         DependencyConfig.Implementation(appCompat),
@@ -83,6 +84,7 @@ object Dependencies {
         DependencyConfig.Implementation(swipeRefreshLayout),
         DependencyConfig.Implementation(navigationFragmentKtx),
         DependencyConfig.Implementation(navigationUiKtx),
+        DependencyConfig.Implementation(paging),
         DependencyConfig.TestImplementation(junit),
         DependencyConfig.TestImplementation(mockito),
         DependencyConfig.TestImplementation(archTesting),

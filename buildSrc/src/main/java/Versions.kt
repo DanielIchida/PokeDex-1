@@ -27,4 +27,5 @@ object Versions {
     const val mockito = "3.2.0"
     const val archTesting = "2.1.0"
     const val androidXJunit = "1.1.1"
+    const val paging = "2.1.0"
 }
