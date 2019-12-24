@@ -26,10 +26,9 @@ open class PokemonService(
         return database?.getPokemonByName(pokemonName)?.toPokemon()
     }
 
-    // TODO: Determine how best to handle nullability here.
-    private suspend fun getPokemonDetailFromNetwork(pokemonName: String): Pokemon {
+    private suspend fun getPokemonDetailFromNetwork(pokemonName: String): Pokemon? {
         return api?.getPokemonDetail(pokemonName).toPokemon()?.also {
             database?.insertPokemon(it.toPersistablePokemon())
-        } ?: Pokemon()
+        }
     }
 }

@@ -1,12 +1,15 @@
-package com.adammcneilly.pokedex.data.remote
+package com.adammcneilly.pokedex.data.paging
 
 import androidx.paging.PageKeyedDataSource
 import com.adammcneilly.pokedex.DispatcherProvider
 import com.adammcneilly.pokedex.models.Pokemon
+import com.adammcneilly.pokedex.models.toPokemon
+import com.adammcneilly.pokedex.network.PokemonAPI
+import com.adammcneilly.pokedex.network.models.PokemonDTO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class PokemonPagingDatasource(
+class PokemonPagingDataSource(
     private val pokemonAPI: PokemonAPI,
     private val scope: CoroutineScope,
     private val dispatcherProvider: DispatcherProvider = DispatcherProvider()
@@ -17,9 +20,11 @@ class PokemonPagingDatasource(
         callback: LoadInitialCallback<Int, Pokemon>
     ) {
         scope.launch(dispatcherProvider.IO) {
-            val response = pokemonAPI.getPokemonAsync(offset = 0).await()
+            val response = pokemonAPI.getPokemon(offset = 0)
+            val items = response.results?.mapNotNull(PokemonDTO::toPokemon).orEmpty()
+
             callback.onResult(
-                response.results.orEmpty(),
+                items,
                 null,
                 response.nextKey
             )
@@ -33,9 +38,9 @@ class PokemonPagingDatasource(
         val offset = params.key
 
         scope.launch(dispatcherProvider.IO) {
-            val response = pokemonAPI.getPokemonAsync(offset = offset).await()
+            val response = pokemonAPI.getPokemon(offset = offset)
             callback.onResult(
-                response.results.orEmpty(),
+                response.results?.map(PokemonDTO::toPokemon).orEmpty(),
                 response.nextKey
             )
         }

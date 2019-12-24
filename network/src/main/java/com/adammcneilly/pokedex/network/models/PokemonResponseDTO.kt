@@ -11,4 +11,10 @@ data class PokemonResponseDTO(
     val previous: String? = null,
     @field:Json(name = "results")
     val results: List<PokemonDTO>? = null
-)
+) {
+    /**
+     * TODO: Need to calculate this.
+     */
+    val nextKey: Int?
+        get() = null
+}
