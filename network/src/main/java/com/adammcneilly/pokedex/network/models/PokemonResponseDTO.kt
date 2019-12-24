@@ -14,7 +14,13 @@ data class PokemonResponseDTO(
 ) {
     /**
      * TODO: Need to calculate this.
+     * Better to use some Uri classes.
      */
     val nextKey: Int?
-        get() = null
+        get() {
+            // Strip out base url
+            val params = next?.removePrefix("https://pokeapi.co/api/v2/pokemon?offset=")
+            val withoutLimit = params?.substringBefore("&")
+            return withoutLimit?.toIntOrNull()
+        }
 }

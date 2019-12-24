@@ -21,9 +21,12 @@ import com.adammcneilly.pokedex.models.Pokemon
 import com.adammcneilly.pokedex.network.DefaultPokemonAPI
 import com.adammcneilly.pokedex.pokemonlist.PokemonListFragmentDirections.Companion.toPokemonDetail
 import com.adammcneilly.pokedex.views.PokemonAdapter
+import com.adammcneilly.pokedex.views.PokemonPagingAdapter
+import java.util.concurrent.Executors
 
 class PokemonListFragment : Fragment() {
     private val pokemonAdapter = PokemonAdapter(this::onPokemonClicked)
+    private val pagingPokemonAdapter = PokemonPagingAdapter(this::onPokemonClicked)
 
     private lateinit var viewModel: PokemonListViewModel
     private lateinit var binding: FragmentPokemonListBinding
@@ -31,9 +34,11 @@ class PokemonListFragment : Fragment() {
     private val viewModelFactory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             val pokemonAPI = DefaultPokemonAPI((activity?.application as? PokeApp)?.baseUrl.orEmpty())
+            val executor = Executors.newFixedThreadPool(5)
             val repository = PokemonService(
                 database = null,
-                api = pokemonAPI
+                api = pokemonAPI,
+                networkExecutor = executor
             )
 
             @Suppress("UNCHECKED_CAST")
@@ -71,7 +76,7 @@ class PokemonListFragment : Fragment() {
         val recyclerView = binding.pokemonList
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = pokemonAdapter
+        recyclerView.adapter = pagingPokemonAdapter
         recyclerView.addItemDecoration(
             DividerItemDecoration(
                 requireContext(),
@@ -83,10 +88,16 @@ class PokemonListFragment : Fragment() {
     private fun setupViewModel() {
         binding.viewModel = viewModel
 
-        viewModel.pokemon.observe(
-            this,
+        // viewModel.pokemon.observe(
+        //     this,
+        //     Observer {
+        //         it?.let(pokemonAdapter::items::set)
+        //     }
+        // )
+        viewModel.pokemonList.observe(
+            viewLifecycleOwner,
             Observer {
-                it?.let(pokemonAdapter::items::set)
+                it?.let(pagingPokemonAdapter::submitList)
             }
         )
     }

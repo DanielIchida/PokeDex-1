@@ -18,7 +18,7 @@ class PokemonPagingDataSourceFactory(
             pokemonAPI = pokemonAPI,
             scope = scope
         )
-        pokemonDataSource.value = dataSource
+        pokemonDataSource.postValue(dataSource)
         return dataSource
     }
 }

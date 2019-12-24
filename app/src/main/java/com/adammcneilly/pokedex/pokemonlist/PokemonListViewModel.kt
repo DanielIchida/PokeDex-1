@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagedList
 import com.adammcneilly.pokedex.BaseObservableViewModel
 import com.adammcneilly.pokedex.DispatcherProvider
+import com.adammcneilly.pokedex.data.Listing
 import com.adammcneilly.pokedex.data.PokemonRepository
 import com.adammcneilly.pokedex.models.Pokemon
 import kotlinx.coroutines.launch
@@ -35,8 +37,14 @@ class PokemonListViewModel(
         state is PokemonListState.Loaded
     }
 
+    private val _listing: MutableLiveData<Listing<Pokemon>> = MutableLiveData()
+    val pokemonList: LiveData<PagedList<Pokemon>> = Transformations.switchMap(_listing) { listing ->
+        listing.pagedList
+    }
+
     init {
         fetchPokemonList()
+        fetchPokemonPaging()
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -63,6 +71,10 @@ class PokemonListViewModel(
 
             setState(newState)
         }
+    }
+
+    private fun fetchPokemonPaging() {
+        _listing.value = repository.getPokemonPaging(viewModelScope)
     }
 
     private fun startLoading() {

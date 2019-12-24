@@ -28,7 +28,7 @@ open class PokemonService(
         return getPokemonDetailFromDatabase(pokemonName) ?: getPokemonDetailFromNetwork(pokemonName)
     }
 
-    override suspend fun getPokemonPaging(scope: CoroutineScope): Listing<Pokemon> {
+    override fun getPokemonPaging(scope: CoroutineScope): Listing<Pokemon> {
         val sourceFactory = PokemonPagingDataSourceFactory(api, scope)
 
         val livePagedList = sourceFactory.toLiveData(

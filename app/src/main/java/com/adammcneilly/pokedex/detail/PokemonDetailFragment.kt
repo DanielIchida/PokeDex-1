@@ -15,6 +15,7 @@ import com.adammcneilly.pokedex.data.PokemonService
 import com.adammcneilly.pokedex.database.DefaultPokedexDatabase
 import com.adammcneilly.pokedex.databinding.FragmentPokemonDetailBinding
 import com.adammcneilly.pokedex.network.DefaultPokemonAPI
+import java.util.concurrent.Executors
 
 class PokemonDetailFragment : Fragment() {
     private lateinit var binding: FragmentPokemonDetailBinding
@@ -24,7 +25,8 @@ class PokemonDetailFragment : Fragment() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             val api = DefaultPokemonAPI((activity?.application as? PokeApp)?.baseUrl.orEmpty())
             val database = DefaultPokedexDatabase(requireContext())
-            val repository = PokemonService(database, api)
+            val executor = Executors.newFixedThreadPool(5)
+            val repository = PokemonService(database, api, executor)
             val arguments: PokemonDetailFragmentArgs by navArgs()
             val pokemonName = arguments.pokemonName
 
