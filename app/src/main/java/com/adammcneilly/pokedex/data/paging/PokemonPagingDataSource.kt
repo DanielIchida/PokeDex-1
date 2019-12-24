@@ -1,7 +1,10 @@
 package com.adammcneilly.pokedex.data.paging
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.adammcneilly.pokedex.DispatcherProvider
+import com.adammcneilly.pokedex.data.NetworkState
 import com.adammcneilly.pokedex.models.Pokemon
 import com.adammcneilly.pokedex.models.toPokemon
 import com.adammcneilly.pokedex.network.PokemonAPI
@@ -15,19 +18,36 @@ class PokemonPagingDataSource(
     private val dispatcherProvider: DispatcherProvider = DispatcherProvider()
 ) : PageKeyedDataSource<Int, Pokemon>() {
 
+    private val _initialLoad: MutableLiveData<NetworkState> = MutableLiveData()
+    val initialLoad: LiveData<NetworkState> = _initialLoad
+
+    private val _networkState: MutableLiveData<NetworkState> = MutableLiveData()
+    val networkState: LiveData<NetworkState> = _networkState
+
     override fun loadInitial(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, Pokemon>
     ) {
         scope.launch(dispatcherProvider.IO) {
-            val response = pokemonAPI.getPokemon(offset = 0)
-            val items = response.results?.mapNotNull(PokemonDTO::toPokemon).orEmpty()
+            _initialLoad.postValue(NetworkState.LOADING)
+            _networkState.postValue(NetworkState.LOADING)
 
-            callback.onResult(
-                items,
-                null,
-                response.nextKey
-            )
+            try {
+                val response = pokemonAPI.getPokemon(offset = 0)
+                val items = response.results?.mapNotNull(PokemonDTO::toPokemon).orEmpty()
+
+                callback.onResult(
+                    items,
+                    null,
+                    response.nextKey
+                )
+
+                _initialLoad.postValue(NetworkState.LOADED)
+                _networkState.postValue(NetworkState.LOADED)
+            } catch (error: Throwable) {
+                _initialLoad.postValue(NetworkState.error(error.message))
+                _networkState.postValue(NetworkState.error(error.message))
+            }
         }
     }
 
@@ -39,8 +59,10 @@ class PokemonPagingDataSource(
 
         scope.launch(dispatcherProvider.IO) {
             val response = pokemonAPI.getPokemon(offset = offset)
+            val items = response.results?.mapNotNull(PokemonDTO::toPokemon).orEmpty()
+
             callback.onResult(
-                response.results?.map(PokemonDTO::toPokemon).orEmpty(),
+                items,
                 response.nextKey
             )
         }
