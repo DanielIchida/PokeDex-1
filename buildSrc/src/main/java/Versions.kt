@@ -1,7 +1,7 @@
 object Versions {
     const val kotlin = "1.3.61"
     const val ktlint = "9.1.1"
-    const val detekt = "1.2.2"
+    const val detekt = "1.3.0"
     const val staticAnalysis = "1.2"
     const val versionsPlugin = "0.27.0"
     const val navigation = "2.1.0"

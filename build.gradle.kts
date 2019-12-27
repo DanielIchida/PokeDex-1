@@ -23,6 +23,13 @@ buildscript {
     }
 }
 
+plugins {
+    id("org.jlleitschuh.gradle.ktlint").version(Versions.ktlint)
+    id("org.jlleitschuh.gradle.ktlint-idea").version(Versions.ktlint)
+    id("com.github.ben-manes.versions").version(Versions.versionsPlugin)
+    id("io.gitlab.arturbosch.detekt").version(Versions.detekt)
+}
+
 allprojects {
     repositories {
         google()
@@ -71,12 +78,6 @@ gradle.taskGraph.whenReady {
             it.enabled = false
         }
     }
-}
-
-plugins {
-    id("org.jlleitschuh.gradle.ktlint").version(Versions.ktlint)
-    id("org.jlleitschuh.gradle.ktlint-idea").version(Versions.ktlint)
-    id("com.github.ben-manes.versions").version(Versions.versionsPlugin)
 }
 
 tasks.withType<DependencyUpdatesTask> {
