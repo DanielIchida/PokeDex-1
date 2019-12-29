@@ -1,28 +1,9 @@
-autoCorrect: true
-
-test-pattern: # Configure exclusions for test sources
-  active: true
-  patterns: # Test file regexes
-    - '.*/test/.*'
-    - '.*/androidTest/.*'
-    - '.*Test.kt'
-    - '.*Spec.kt'
-    - '.*Spek.kt'
-  exclude-rule-sets:
-    - 'comments'
-  exclude-rules:
-    - 'NamingRules'
-    - 'WildcardImport'
-    - 'MagicNumber'
-    - 'MaxLineLength'
-    - 'LateinitUsage'
-    - 'StringLiteralDuplication'
-    - 'SpreadOperator'
-    - 'TooManyFunctions'
-    - 'ForEachOnRange'
-    - 'FunctionMaxLength'
-    - 'TooGenericExceptionCaught'
-    - 'InstanceOfCheckForException'
+config:
+  validation: true
+  # https://arturbosch.github.io/detekt/extensions.html#custom-rulesets
+  # 1. exclude rule set 'pokedex' and all its nested members
+  # 2. exclude every property in every rule under the rule set 'pokedex'
+  excludes: "pokedex.*,pokedex>.*>.*"
 
 processors:
   active: true
@@ -227,8 +208,6 @@ formatting:
   NoEmptyClassBody:
     active: true
     autoCorrect: true
-  NoItParamInMultilineLambda:
-    active: false
   NoLineBreakAfterElse:
     active: true
     autoCorrect: true
@@ -522,6 +501,6 @@ style:
     active: true
     excludeImports: 'java.util.*,kotlinx.android.synthetic.*'
 
-#pokedex-rules:
-#  NamedParameters:
-#    active: true
+pokedex:
+  NamedParameters:
+    active: true

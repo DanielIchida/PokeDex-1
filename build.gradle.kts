@@ -42,6 +42,11 @@ subprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
     apply(plugin = "com.novoda.static-analysis")
 
+    dependencies {
+        detekt("io.gitlab.arturbosch.detekt:detekt-cli:${Versions.detekt}")
+        detekt(project(":rules", "default"))
+    }
+
     ktlint {
         version.set("0.35.0")
         android.set(true)

@@ -33,6 +33,7 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
 
+    annotationProcessor("org.jetbrains.kotlin:kotlin-compiler-embeddable:${KotlinCompilerVersion.VERSION}")
     compileOnly("io.gitlab.arturbosch.detekt:detekt-api:${Versions.detekt}")
 
     addDependencies(Dependencies.rulesDependencies)

@@ -6,7 +6,7 @@ import io.gitlab.arturbosch.detekt.api.RuleSetProvider
 
 class PokedexProvider : RuleSetProvider {
 
-    override val ruleSetId: String = "pokedex-rules"
+    override val ruleSetId: String = "pokedex"
 
     override fun instance(config: Config): RuleSet = RuleSet(
         ruleSetId,
