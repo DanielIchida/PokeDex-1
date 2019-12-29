@@ -74,6 +74,7 @@ dependencies {
     }
 
     addDependencies(Dependencies.appDependencies)
+    detektPlugins(project(":rules", "default"))
 }
 
 configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {

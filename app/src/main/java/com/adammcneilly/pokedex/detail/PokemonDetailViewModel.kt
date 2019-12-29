@@ -75,6 +75,7 @@ class PokemonDetailViewModel(
         fetchPokemonDetail()
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun fetchPokemonDetail() {
         viewModelScope.launch {
             startLoading()
